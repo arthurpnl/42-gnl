@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 17:22:36 by arpenel           #+#    #+#             */
-/*   Updated: 2025/01/31 15:51:20 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/01/31 15:19:31 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,11 @@
 // 1. Read the file and stock the data 
 char	*read_n_stock(int fd, static char *storage)
 {
-	char	buffer;
-	int		byte_read;
-
-	buffer + BUFFER_ZISE + 1;
-	bytes_read = 1;
-	while (!ft_strchr(storage, '\n') && bytes_read > 0)
-	{
-		buffer 
-	}
+	fd = open(fd )	
 }
-
 // 2. Extract the line 
 // 3. Update storage variable
-// 4. Return the lign that we just extract
+// 4. Return the lign that we just extract 
 
 char	get_next_line(int fd)
 {
@@ -42,7 +33,7 @@ char	get_next_line(int fd)
 
 	storage = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+	return (NULL);
 }
 
 int	main(void)
