@@ -136,6 +136,8 @@ char	*readbuf(int fd, char *storage)
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
+	if (!storage)
+		storage = ft_strdup("");
 	while (!ft_strchr(storage, '\n') && bytes_read > 0) // Read til we find a \n
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -144,6 +146,7 @@ char	*readbuf(int fd, char *storage)
 		buffer[bytes_read] = '\0'; // Trasnform buffer as a valid string.
 		storage = ft_strjoin(storage, buffer); // Cat the two strings
 	}
+	free(buffer);
 	return (storage);
 }
 
@@ -186,7 +189,6 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 
-	storage = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	storage = readbuf(fd, storage);
