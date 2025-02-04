@@ -20,8 +20,6 @@
 
 #define BUFFER_SIZE 1024
 
-static char *storage;
-
 int	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -151,7 +149,7 @@ char	*readbuf(int fd, char *storage)
 }
 
 // 2. Extract the line 
-char *extract_line(char *storage )
+char *extract_line(char *storage)
 {
 	char	*line;
 	int		i;
@@ -188,33 +186,38 @@ char	*clean_n_stock(char *storage)
 char	*get_next_line(int fd)
 {
 	char		*line;
+	static char *storage;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	storage = readbuf(fd, storage);
 	line = extract_line(storage);
 	storage = clean_n_stock(storage);
+	if (!storage)
+		return (NULL);
 
 	return (line);
 }
 
-int	main(void)
+int    main(int ac, char **av)
 {
-	int		fd;
-	char	*line;
+    int        fd;
+    char    *s;
 
-	fd = open("test.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		printf("Error openning the file");
-		return (1);
-	}
-	while (1)
-	{
-		line = get_next_line(fd);
-		if (line == NULL)
-			break ;
-		printf("%s", line);
-		free(line);
-	}
+    if (ac != 2)
+        return (1);
+    fd = open(av[1], O_RDONLY);
+    s = "";
+    while (s)
+    {
+        s = get_next_line(fd);
+        printf("%s", s);
+        free(s);
+    }
+    s = get_next_line(fd);
+    printf("%s---\n", s);
+    free(s);
 }
+
+
+// Pq il continue a return
