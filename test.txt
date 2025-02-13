@@ -1,7 +1,0 @@
-Première ligne de test.
-Deuxième ligne avec un peu plus de texte.
-
-Une ligne vide précède celle-ci.
-1234567890
-
-Dernière ligne sans saut de ligne à la fin.

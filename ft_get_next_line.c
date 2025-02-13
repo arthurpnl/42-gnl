@@ -6,7 +6,7 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 17:22:36 by arpenel           #+#    #+#             */
-/*   Updated: 2025/01/31 15:51:20 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/02/13 19:33:08 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <fcntl.h>
-#include <stdlib.h>
-
 
 #define BUFFER_SIZE 1024
 
@@ -39,7 +37,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*cat_str;
 
 	if (!s1 && !s2)
-		return NULL;
+		return (NULL);
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	cat_str = malloc((s1_len + s2_len + 1) * sizeof(char));
@@ -129,6 +127,7 @@ char	*readbuf(int fd, char *storage)
 {
 	char	*buffer;
 	int		bytes_read;
+	char	*tmp;
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
@@ -136,13 +135,15 @@ char	*readbuf(int fd, char *storage)
 	bytes_read = 1;
 	if (!storage)
 		storage = ft_strdup("");
-	while (!ft_strchr(storage, '\n') && bytes_read > 0) // Read til we find a \n
+	while (!ft_strchr(storage, '\n') && bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
 			return (NULL);
-		buffer[bytes_read] = '\0'; // Trasnform buffer as a valid string.
-		storage = ft_strjoin(storage, buffer); // Cat the two strings
+		buffer[bytes_read] = '\0';
+		tmp = storage;
+		storage = ft_strjoin(storage, buffer);
+		free(tmp);
 	}
 	free(buffer);
 	return (storage);
@@ -151,11 +152,11 @@ char	*readbuf(int fd, char *storage)
 // 2. Extract the line 
 char *extract_line(char *storage)
 {
-	char	*line;
 	int		i;
-	
+	char	*line;
+
 	i = 0;
-	if(!storage)
+	if (!storage)
 		return (NULL);
 	while (storage[i] && storage[i] != '\n')
 		i++;
@@ -163,61 +164,64 @@ char *extract_line(char *storage)
 	return (line);
 }
 
-// 3. Stock the rest of the lign in a new variables
+// 3. Stock the rest of the line in a new variable
 char	*clean_n_stock(char *storage)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 	char	*new_storage;
 
+	if (!storage)
+		return (NULL);
 	i = 0;
-	while(storage[i] && storage[i] != '\n')
+	while (storage[i] && storage[i] != '\n')
 		i++;
-	if(!storage[i])
+	if (!storage[i])
 	{
 		free(storage);
-		return NULL;
+		return (NULL);
 	}
+	tmp = storage;
 	new_storage = ft_strdup(storage + i + 1);
-	free(storage);
+	free(tmp);
 	return (new_storage);
 }
-
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char *storage;
+	static char	*storage;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	storage = readbuf(fd, storage);
-	line = extract_line(storage);
-	storage = clean_n_stock(storage);
 	if (!storage)
 		return (NULL);
-
+	line = extract_line(storage);
+	storage = clean_n_stock(storage);
+	if (!line || line[0] == '\0')
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }
 
 int    main(int ac, char **av)
 {
-    int        fd;
-    char    *s;
+	int		fd;
+	char	*s;
 
-    if (ac != 2)
-        return (1);
-    fd = open(av[1], O_RDONLY);
-    s = "";
-    while (s)
-    {
-        s = get_next_line(fd);
-        printf("%s", s);
-        free(s);
-    }
-    s = get_next_line(fd);
-    printf("%s---\n", s);
-    free(s);
+	if (ac != 2)
+		return (1);
+	fd = open(av[1], O_RDONLY);
+	if (fd < 0)
+		return (1);
+	while ((s = get_next_line(fd)) != NULL)
+	{
+		printf("%s", s);
+		free(s);
+	}
+	close(fd);
+	return (0);
 }
-
-
-// Pq il continue a return
