@@ -1,0 +1,14 @@
+Ligne simple sans retour à la ligne
+Ligne avec un \n à la fin
+
+Ligne avec plusieurs\nretours\nà\nla\nligne
+
+Une ligne très très très très très très très très très très très très très longue qui dépasse BUFSIZ pour tester la gestion des gros buffers.............................................................................................................................................................................................................................................................................................................................................................................................................................................................
+
+Ligne avec caractères spéciaux !@#$%^&*()_+{}:"<>?
+
+Ligne avec un tab\tet plusieurs espaces   entre les mots
+
+Ligne vide suivie d'une autre ligne
+
+Une dernière ligne sans retour à la fin
